@@ -1,0 +1,39 @@
+version: '3.5'
+
+services:
+  app_beneficios:
+    container_name: app_beneficios
+    build:
+      context: .
+    command: >
+
+      sh -c "cd beneficios && php artisan serve --host=0.0.0.0 --port=8000"
+      # args:
+      #   UID: $U_ID
+    volumes:
+      - ./:/appdata/www
+    ports:
+      - '8080:8000'
+    networks:
+      - application-network
+
+  db:
+      image: mysql:8.0.20
+      command: --default-authentication-plugin=mysql_native_password
+      volumes:
+          - db:/var/lib/mysql
+      environment:
+          MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+          MYSQL_DATABASE: ${MYSQL_DATABASE}
+          MYSQL_USER: ${MYSQL_USER}
+          MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      ports:
+          - 33061:3306
+      networks:
+          - application-network
+
+networks:
+  application-network:
+
+volumes:
+  db:
